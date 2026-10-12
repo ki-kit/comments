@@ -5,13 +5,56 @@ SESSION_KEY ("simpleComments.session"): Tracks the currently logged-in username 
 authMode: Tracks whether the auth panel is currently set to "login" or "register" (defaults to "login").   
 */
 const USERS_KEY = "simpleComments.users";
+const COMMENTS_KEY = "simpleComments.comments"
 const SESSION_KEY = "simpleComments.session";
 
 let authMode = "login";
 let currentUser = sessionStorage.getItem(SESSION_KEY) || null;
+let openReplyId = null;
+let nextFormId = 0;
+
+// all the DOM selectors:
+const authPanel = document.getElementById("auth-panel");
+const authForm = document.getElementById("auth-form");
+const authMessage = document.getElementById("auth-message");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const sessionArea = document.getElementById("session-area");
+const commentsContainer = document.getElementById("comments");
+const emptyState = document.getElementById("empty-state");
+const guestNotice = document.getElementById("guest-notice");
+const commentCount = document.getElementById("comment-count");
+const loginTab = document.getElementById("login-tab");
+const registerTab = document.getElementById("register-tab");
+const authSubmit = document.getElementById("auth-submit");
+
+// Helper functions for storage and DOM creation
+function readJSON(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch (error) {
+    console.error(`Could not read ${key}`, error);
+    return fallback;
+  }
+}
+function saveJSON(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getUsers() { return readJSON(USERS_KEY, []); }
+function getComments() { return readJSON(COMMENTS_KEY, []); }
+
+// a function to generate DOM nodes dynamically
+function makeElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
 
 // 2. Switching Between Login and Register Modes
-// Users can switch between logging in and registering via interactive tabs defined in `index.html`[cite: 4]. Clicking these tabs updates the `authMode` state, adjusts button text, configures password autocomplete attributes, and clears old messages[cite: 1]:
+// Users can switch between logging in and registering via interactive tabs defined in `index.html`. Clicking these tabs updates the `authMode` state, adjusts button text, configures password autocomplete attributes, and clears old messages:
 
 function setAuthMode(mode) {
   authMode = mode;
@@ -24,14 +67,17 @@ function setAuthMode(mode) {
   passwordInput.autocomplete = isLogin ? "current-password" : "new-password";
   authMessage.textContent = "";
 }
+loginTab.addEventListener("click", () => setAuthMode("login"));
+registerTab.addEventListener("click", () => setAuthMode("register"));
+
 
 /*
 3. Handling Form Submission (Registration & Login)
-When the authentication form is submitted, `app.js` performs validation checks, interacts with `localStorage` to check existing accounts, and updates the active session[cite: 1]:
+When the authentication form is submitted, `app.js` performs validation checks, interacts with `localStorage` to check existing accounts, and updates the active session:
 
-* **Validation**: Ensures usernames are at least 3 characters and passwords are at least 4 characters long[cite: 1].
-* **Registration Logic**: If `authMode === "register"`, it checks if the username already exists[cite: 1]. If unique, it pushes the new user object to the users array, saves it via `localStorage`, and instantly logs the user in by setting `sessionStorage`[cite: 1].
-* **Login Logic**: If `authMode === "login"`, it verifies that the username exists and the password matches[cite: 1]. Upon success, it updates `currentUser` and stores it in `sessionStorage`[cite: 1].
+* **Validation**: Ensures usernames are at least 3 characters and passwords are at least 4 characters long.
+* **Registration Logic**: If `authMode === "register"`, it checks if the username already exists. If unique, it pushes the new user object to the users array, saves it via `localStorage`, and instantly logs the user in by setting `sessionStorage`.
+* **Login Logic**: If `authMode === "login"`, it verifies that the username exists and the password matches. Upon success, it updates `currentUser` and stores it in `sessionStorage`.
 */
 
 authForm.addEventListener("submit", (event) => {
@@ -79,7 +125,7 @@ authForm.addEventListener("submit", (event) => {
 
 
 // 4. Logout Functionality
-// To end the session, the `logout` function clears the active user from memory, removes the item from `sessionStorage`, resets any open reply states, and re-renders the UI to show the guest view[cite: 1]:
+// To end the session, the `logout` function clears the active user from memory, removes the item from `sessionStorage`, resets any open reply states, and re-renders the UI to show the guest view:
 function logout() {
   currentUser = null;
   sessionStorage.removeItem(SESSION_KEY);
@@ -190,9 +236,9 @@ function createComposer(parentId = null) {
 
 /*
 6. Building the Comment Tree Structure
-To allow users to reply to any comment—creating a nested subtree of discussions—the application uses recursive data management and rendering functions[cite: 1, 5].
+To allow users to reply to any comment—creating a nested subtree of discussions—the application uses recursive data management and rendering functions.
 
-* **Recursive Subtree Attachment (`addReplyToTree`)**: When a reply is submitted with a `parentId`, this helper function recursively traverses the comment array and its nested `replies` arrays until it finds the target comment ID, appending the new reply to its children[cite: 1].
+* **Recursive Subtree Attachment (`addReplyToTree`)**: When a reply is submitted with a `parentId`, this helper function recursively traverses the comment array and its nested `replies` arrays until it finds the target comment ID, appending the new reply to its children.
 */
 
 function addReplyToTree(comments, targetId, reply) {
@@ -206,21 +252,6 @@ function addReplyToTree(comments, targetId, reply) {
   }
   return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -267,3 +298,38 @@ function createCommentNode(comment) {
   article.append(replies);
   return article;
 }
+
+function render() {
+  sessionArea.replaceChildren();
+  if (currentUser) {
+    sessionArea.append(
+      makeElement("span", "session-user", `Logged in as ${currentUser}`),
+    );
+    const logoutButton = makeElement("button", "logout-button", "Log out");
+    logoutButton.type = "button";
+    logoutButton.addEventListener("click", logout);
+    sessionArea.append(logoutButton);
+    authPanel.hidden = true;
+    guestNotice.hidden = true;
+  } else {
+    authPanel.hidden = false;
+    guestNotice.hidden = false;
+  }
+
+  commentsContainer.replaceChildren();
+  const comments = getComments();
+  for (const comment of comments) commentsContainer.append(createCommentNode(comment));
+  const total = countComments(comments);
+  commentCount.textContent = `${total} ${total === 1 ? "comment" : "comments"}`;
+  emptyState.hidden = total > 0;
+  const existingComposer = document.getElementById("top-level-composer");
+  if (existingComposer) existingComposer.remove();
+  if (currentUser) {
+    const composer = createComposer();
+    composer.id = "top-level-composer";
+    commentsContainer.before(composer);
+  }
+}
+
+// Initialize the app
+render();

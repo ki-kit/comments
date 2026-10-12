@@ -1,8 +1,3 @@
-/*
-Root Variables & Typography
-The styling defines a clean color palette using CSS variables for consistency, alongside a playful font family and box-sizing rules:
-*/
-
 :root {
   --page-bg: #F5F5F5;
   --navy: #00325A;
@@ -23,12 +18,6 @@ body {
 }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
-
-/*
-2. Main Page Layout
-The main `.page` wrapper constrains the content area width and sets up spacing, while the header uses a flexbox layout to distribute the title and session area elements[cite: 6]:
-*/
-
 .page { width: 70%; max-width: 1500px; margin: 42px auto 30px; }
 .page-header, .discussion-heading, .session-area {
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
@@ -38,12 +27,6 @@ h1 { font-size: 2rem; margin-bottom: 2px; color: var(--navy); }
 h2 { font-size: 1.35rem; margin-bottom: 12px; }
 .subtitle, .muted { color: var(--muted); }
 .subtitle { margin-bottom: 0; }
-
-/*
-3. Authentication Panel & Tabs
-The authentication box is styled as a card container (`.panel`), and the login/register tabs include interactive states (`.active`) to cleanly distinguish the currently selected mode[cite: 6]:
-*/
-
 .panel {
   background: #fff; border: 1px solid var(--line); border-radius: 12px;
   padding: 24px; margin: 26px 0 34px; box-shadow: 0 3px 12px #00000008;
@@ -55,12 +38,7 @@ The authentication box is styled as a card container (`.panel`), and the login/r
   background: #fff; transition: background-color .15s, color .15s, border-color .15s;
 }
 .tab { border-color: var(--line); color: var(--navy); }
-
-/* 
-4. Form Inputs & Primary Actions
-Form controls feature responsive spacing, clear borders, and focus rings to enhance usability during registration and login[cite: 6]:
-*/
-
+.tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
 label { display: block; margin: 12px 0 6px; }
 input, textarea {
   width: 100%; border: 1px solid #c9cdd1; border-radius: 7px;
@@ -71,3 +49,45 @@ input:focus, textarea:focus { outline: 2px solid #00325a35; border-color: var(--
 .primary-button:hover { color: var(--navy); background: #fff; }
 .form-message { margin: 12px 0 0; color: var(--orange); }
 .form-message:empty { display: none; }
+.session-area { justify-content: flex-end; flex-wrap: wrap; }
+.session-user { color: var(--navy); }
+.logout-button { border-color: var(--navy); color: var(--navy); }
+.logout-button:hover { background: var(--navy); color: #fff; }
+.discussion { margin-top: 20px; }
+.discussion-heading { border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 18px; }
+.discussion-heading h2 { margin: 0; }
+.count { color: var(--muted); font-size: .9rem; }
+.comments { display: flex; flex-direction: column; gap: 16px; }
+.comment {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px 20px; min-width: 0;
+}
+.comment-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.comment-author { color: var(--navy); font-weight: bold; }
+.comment-time { color: var(--muted); font-size: .78rem; }
+.comment-body { margin-bottom: 12px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.comment-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.reply-button { background: #FFFFFF; color: #00325A; border-color: #00325A; }
+.reply-button:hover { background: #00325A; color: #FFFFFF; }
+.add-button { background: #FFFFFF; color: #DE5050; border-color: #DE5050; }
+.add-button:hover { background: #DE5050; color: #FFFFFF; }
+.reply-form { margin-top: 14px; }
+.reply-form textarea, .new-comment textarea { min-height: 95px; resize: vertical; }
+.reply-form .form-actions, .new-comment .form-actions { display: flex; gap: 10px; margin-top: 10px; }
+.cancel-button { border: 1px solid #aeb4ba; color: var(--ink); background: #fff; border-radius: 7px; padding: 9px 16px; }
+.cancel-button:hover { background: #eceff1; }
+.comment-children { margin: 16px 0 0 22px; padding-left: 18px; border-left: 2px solid #d9e1e7; display: flex; flex-direction: column; gap: 14px; }
+.comment-children:empty { display: none; }
+.new-comment { margin: 22px 0; background: #fff; padding: 20px; border: 1px solid var(--line); border-radius: 10px; }
+.new-comment h3 { font-size: 1.1rem; margin-bottom: 10px; }
+.blocked-message { color: #FF8300; margin: 10px 0 0; }
+.success-message { color: #267447; margin: 10px 0 0; }
+.empty-state { color: var(--muted); text-align: center; padding: 26px; border: 1px dashed #c9cdd1; border-radius: 10px; }
+.empty-state[hidden] { display: none; }
+footer { margin-top: 34px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+@media (max-width: 900px) {
+  .page { width: 92%; margin-top: 22px; }
+  .page-header { align-items: flex-start; flex-direction: column; }
+  .session-area { justify-content: flex-start; }
+  .comment-children { margin-left: 8px; padding-left: 10px; }
+}

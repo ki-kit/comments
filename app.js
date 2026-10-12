@@ -45,6 +45,15 @@ function saveJSON(key, value) {
 function getUsers() { return readJSON(USERS_KEY, []); }
 function getComments() { return readJSON(COMMENTS_KEY, []); }
 
+function countComments(comments) {
+  return comments.reduce((total, comment) => total + 1 + countComments(comment.replies || []), 0);
+}
+
+function formatTimestamp(iso) {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? "Unknown time" : date.toLocaleString();
+}
+
 // a function to generate DOM nodes dynamically
 function makeElement(tag, className, text) {
   const element = document.createElement(tag);
@@ -298,6 +307,31 @@ function createCommentNode(comment) {
   article.append(replies);
   return article;
 }
+
+// 8. add a comment checker
+function checkCommentInWorker(text) {
+  return new Promise((resolve, reject) => {
+    if (!("Worker" in window)) {
+      reject(new Error("Web Workers are not supported in this browser."));
+      return;
+    }
+    const worker = new Worker("comment-worker.js");
+    worker.onmessage = (event) => {
+      worker.terminate();
+      resolve(event.data);
+    };
+    worker.onerror = (event) => {
+      worker.terminate();
+      reject(event.error || new Error("Worker failed."));
+    };
+    worker.postMessage({ text });
+  });
+}
+
+function iHateWar() {
+  alert("I HATE WAR!!!");
+}
+window.iHateWar = iHateWar;
 
 function render() {
   sessionArea.replaceChildren();

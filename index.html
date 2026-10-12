@@ -7,43 +7,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
-    <header class="page-header">
+  <main>
+    <header>
       <div>
         <h1>Comments</h1>
-        <p class="subtitle">Join the conversation.</p>
+        <p>Join the conversation.</p>
       </div>
-      <div id="session-area" class="session-area" aria-live="polite"></div>
 
-      <section id="auth-panel" class="panel auth-panel" aria-labelledby="auth-heading">
-      <h2 id="auth-heading">Welcome</h2>
-      <p class="muted">Register or log in to add a comment. Guests can read the discussion.</p>
-      <div class="auth-tabs" role="tablist" aria-label="Account options">
-        <button type="button" class="tab active" id="login-tab" role="tab" aria-selected="true">Log in</button>
-        <button type="button" class="tab" id="register-tab" role="tab" aria-selected="false">Register</button>
-      </div>
-      <form id="auth-form">
-        <label for="username">Username</label>
-        <input id="username" name="username" autocomplete="username" minlength="3" maxlength="30" required>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" minlength="4" required>
-        <button class="primary-button" id="auth-submit" type="submit">Log in</button>
-        <p id="auth-message" class="form-message" aria-live="polite"></p>
-      </form>
-    </section>
+      <section>
+        <h2>Welcome</h2>
+        <p>Register or log in to add a comment. Guests can read the discussion.</p>
+        <div>
+          <button type="button">Log in</button>
+          <button type="button">Register</button>
+        </div>
+        <form>
+          <label>Username</label>
+          <input>
+          <label>Password</label>
+          <input>
+          <button>Log in</button>
+        </form>
+      </section>
+    </header>
 
-    <section class="discussion" aria-labelledby="discussion-heading">
-      <div class="discussion-heading">
-        <h2 id="discussion-heading">Discussion</h2>
-        <span id="comment-count" class="count">0 comments</span>
+    <section>
+      <div>
+        <h2>Discussion</h2>
+        <span>0 comments</span>
       </div>
-      <p id="guest-notice" class="muted">You are browsing as a guest. Log in to join the conversation.</p>
-      <div id="comments" class="comments" aria-live="polite"></div>
-      <p id="empty-state" class="empty-state">No comments yet. Start the conversation!</p>
+      <p>You are browsing as a guest. Log in to join the conversation.</p>
+      <p>No comments yet. Start the conversation!</p>
     </section>
     <footer>Comments are stored locally in this browser for demonstration purposes.</footer>
   </main>
-  <script src="app.js"></script>
 </body>
 </html>
-    </header>

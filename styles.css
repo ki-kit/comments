@@ -1,33 +1,73 @@
+/*
+Root Variables & Typography
+The styling defines a clean color palette using CSS variables for consistency, alongside a playful font family and box-sizing rules:
+*/
+
 :root {
   --page-bg: #F5F5F5;
+  --navy: #00325A;
+  --coral: #DE5050;
+  --orange: #FF8300;
+  --ink: #252b32;
+  --muted: #6b737c;
+  --line: #dedede;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   background: var(--page-bg);
   color: var(--ink);
-  font-family: "Lucida Handwriting";
+  font-family: "Lucida Handwriting", "Comic Sans MS", cursive;
   font-size: 18px;
   line-height: 1.55;
 }
-.page { width: 70%; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
 
-/* Normal state */
-.reply-button {
-    background-color: #FFFFFF;
-    color: #00325A;
-}
-.add-comment {
-    background-color: #FFFFFF;
-    color: #DE5050;
-}
+/*
+2. Main Page Layout
+The main `.page` wrapper constrains the content area width and sets up spacing, while the header uses a flexbox layout to distribute the title and session area elements[cite: 6]:
+*/
 
-/* Hover state */
-.reply-button:hover {
-    background-color: #00325A;
-    color: #FFFFFF;
+.page { width: 70%; max-width: 1500px; margin: 42px auto 30px; }
+.page-header, .discussion-heading, .session-area {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }
-.add-comment:hover {
-    background-color: #DE5050;
-    color: #FFFFFF;
+h1, h2, h3, p { margin-top: 0; }
+h1 { font-size: 2rem; margin-bottom: 2px; color: var(--navy); }
+h2 { font-size: 1.35rem; margin-bottom: 12px; }
+.subtitle, .muted { color: var(--muted); }
+.subtitle { margin-bottom: 0; }
+
+/*
+3. Authentication Panel & Tabs
+The authentication box is styled as a card container (`.panel`), and the login/register tabs include interactive states (`.active`) to cleanly distinguish the currently selected mode[cite: 6]:
+*/
+
+.panel {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 24px; margin: 26px 0 34px; box-shadow: 0 3px 12px #00000008;
 }
+.auth-panel { max-width: 680px; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab, .primary-button, .secondary-button, .reply-button, .add-button, .logout-button {
+  border: 1px solid; border-radius: 7px; padding: 9px 16px;
+  background: #fff; transition: background-color .15s, color .15s, border-color .15s;
+}
+.tab { border-color: var(--line); color: var(--navy); }
+
+/* 
+4. Form Inputs & Primary Actions
+Form controls feature responsive spacing, clear borders, and focus rings to enhance usability during registration and login[cite: 6]:
+*/
+
+label { display: block; margin: 12px 0 6px; }
+input, textarea {
+  width: 100%; border: 1px solid #c9cdd1; border-radius: 7px;
+  background: #fff; padding: 11px 12px; color: var(--ink);
+}
+input:focus, textarea:focus { outline: 2px solid #00325a35; border-color: var(--navy); }
+.primary-button { margin-top: 16px; color: #fff; background: var(--navy); border-color: var(--navy); }
+.primary-button:hover { color: var(--navy); background: #fff; }
+.form-message { margin: 12px 0 0; color: var(--orange); }
+.form-message:empty { display: none; }

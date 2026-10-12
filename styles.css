@@ -12,13 +12,13 @@ body {
   margin: 0;
   background: var(--page-bg);
   color: var(--ink);
-  font-family: "Lucida Handwriting", "Comic Sans MS", cursive;
+  font-family: "Lucida Handwriting", "Comic Sans MS";
   font-size: 18px;
   line-height: 1.55;
 }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
-.page { width: 70%; max-width: 1500px; margin: 42px auto 30px; }
+.page { width: 70%; max-width: 1500px; margin: 30px auto 30px; }
 .page-header, .discussion-heading, .session-area {
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }

@@ -1,0 +1,33 @@
+:root {
+  --page-bg: #F5F5F5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--ink);
+  font-family: "Lucida Handwriting";
+  font-size: 18px;
+  line-height: 1.55;
+}
+.page { width: 70%; }
+
+/* Normal state */
+.reply-button {
+    background-color: #FFFFFF;
+    color: #00325A;
+}
+.add-comment {
+    background-color: #FFFFFF;
+    color: #DE5050;
+}
+
+/* Hover state */
+.reply-button:hover {
+    background-color: #00325A;
+    color: #FFFFFF;
+}
+.add-comment:hover {
+    background-color: #DE5050;
+    color: #FFFFFF;
+}
